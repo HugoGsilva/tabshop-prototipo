@@ -530,150 +530,326 @@ function initializeCEPSearch() {
 }
 
 // ==========================================
-//   Logistics Functionality
+//   Logistics Functionality (Multi-Select)
 // ==========================================
 function initializeLogistics() {
-    initializeOrderSelection();
-    initializeShippingCalculation();
-    initializeDispatchActions();
+    initializeMultiSelectOrders();
+    initializeBatchActions();
+    initializeRefreshPrices();
 }
 
-let selectedOrder = null;
+let selectedOrders = new Set();
 
-function initializeOrderSelection() {
-    const selectButtons = document.querySelectorAll('.select-order');
+function initializeMultiSelectOrders() {
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const orderCheckboxes = document.querySelectorAll('.order-checkbox');
+    const selectAllBtn = document.getElementById('selectAllBtn');
 
-    selectButtons.forEach(btn => {
-        btn.addEventListener('click', function () {
-            const orderItem = this.closest('.order-item');
-            const orderId = orderItem.getAttribute('data-order');
-
-            // Remove selection from all orders
-            document.querySelectorAll('.order-item').forEach(item => {
-                item.classList.remove('selected');
-                item.querySelector('.select-order').textContent = 'Selecionar';
+    // Select All checkbox in table header
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function () {
+            const isChecked = this.checked;
+            orderCheckboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+                const row = checkbox.closest('tr');
+                if (isChecked) {
+                    row.classList.add('selected');
+                    selectedOrders.add(row.getAttribute('data-order'));
+                } else {
+                    row.classList.remove('selected');
+                    selectedOrders.delete(row.getAttribute('data-order'));
+                }
             });
-
-            // Select this order
-            orderItem.classList.add('selected');
-            this.textContent = 'Selecionado';
-
-            // Update selected order info
-            selectedOrder = {
-                id: orderId,
-                client: orderItem.querySelector('.order-info span').textContent,
-                value: orderItem.querySelector('.order-items').textContent
-            };
-
-            // Show selected order info
-            const selectedOrderInfo = document.getElementById('selectedOrderInfo');
-            document.getElementById('selectedOrderId').textContent = `#${orderId}`;
-            document.getElementById('selectedOrderClient').textContent = selectedOrder.client;
-            document.getElementById('selectedOrderValue').textContent = selectedOrder.value;
-            selectedOrderInfo.classList.remove('hidden');
-
-            showToast(`Pedido ${orderId} selecionado`, 'success');
+            updateBatchBar();
         });
-    });
-}
+    }
 
-function initializeShippingCalculation() {
-    const shippingForm = document.getElementById('shippingForm');
+    // Individual checkboxes
+    orderCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const row = this.closest('tr');
+            const orderId = row.getAttribute('data-order');
 
-    shippingForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        if (!selectedOrder) {
-            showToast('Selecione um pedido primeiro', 'warning');
-            return;
-        }
-
-        const cep = document.getElementById('destinationCep').value.replace(/\D/g, '');
-
-        if (cep.length !== 8) {
-            showToast('Digite um CEP válido', 'warning');
-            return;
-        }
-
-        // Simulate shipping calculation
-        showToast('Calculando frete...', 'info');
-
-        setTimeout(() => {
-            const shippingOptions = document.getElementById('shippingOptions');
-            shippingOptions.classList.remove('hidden');
-
-            showToast('Opções de frete carregadas!', 'success');
-        }, 1000);
-    });
-}
-
-function initializeDispatchActions() {
-    const generateLabelBtn = document.getElementById('generateLabel');
-    const confirmDispatchBtn = document.getElementById('confirmDispatch');
-    const carrierInputs = document.querySelectorAll('input[name="carrier"]');
-
-    // Enable buttons when carrier is selected
-    carrierInputs.forEach(input => {
-        input.addEventListener('change', function () {
-            generateLabelBtn.disabled = false;
-            confirmDispatchBtn.disabled = false;
-        });
-    });
-
-    generateLabelBtn.addEventListener('click', function () {
-        if (this.disabled) return;
-
-        const selectedCarrier = document.querySelector('input[name="carrier"]:checked');
-        if (!selectedCarrier) {
-            showToast('Selecione uma transportadora', 'warning');
-            return;
-        }
-
-        showToast('Gerando etiqueta de envio...', 'info');
-
-        setTimeout(() => {
-            showToast('Etiqueta gerada com sucesso! Download iniciado.', 'success');
-        }, 1500);
-    });
-
-    confirmDispatchBtn.addEventListener('click', function () {
-        if (this.disabled) return;
-
-        const selectedCarrier = document.querySelector('input[name="carrier"]:checked');
-        if (!selectedCarrier) {
-            showToast('Selecione uma transportadora', 'warning');
-            return;
-        }
-
-        showToast('Confirmando despacho...', 'info');
-
-        setTimeout(() => {
-            showToast(`Pedido ${selectedOrder.id} despachado com sucesso!`, 'success');
-
-            // Remove the order from the list
-            const orderItem = document.querySelector(`[data-order="${selectedOrder.id}"]`);
-            if (orderItem) {
-                orderItem.style.animation = 'slideOut 0.3s ease forwards';
-                setTimeout(() => {
-                    orderItem.remove();
-
-                    // Update pending orders count
-                    const badge = document.querySelector('.approved-orders-card .badge');
-                    const count = document.querySelectorAll('.order-item').length;
-                    badge.textContent = `${count} pedidos`;
-                }, 300);
+            if (this.checked) {
+                row.classList.add('selected');
+                selectedOrders.add(orderId);
+            } else {
+                row.classList.remove('selected');
+                selectedOrders.delete(orderId);
             }
 
-            // Reset selection
-            selectedOrder = null;
-            document.getElementById('selectedOrderInfo').classList.add('hidden');
-            document.getElementById('shippingOptions').classList.add('hidden');
-            document.getElementById('destinationCep').value = '';
-            document.querySelectorAll('input[name="carrier"]').forEach(i => i.checked = false);
-            generateLabelBtn.disabled = true;
-            confirmDispatchBtn.disabled = true;
-        }, 1500);
+            // Update select all checkbox state
+            const allChecked = [...orderCheckboxes].every(cb => cb.checked);
+            const someChecked = [...orderCheckboxes].some(cb => cb.checked);
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = allChecked;
+                selectAllCheckbox.indeterminate = someChecked && !allChecked;
+            }
+
+            updateBatchBar();
+        });
     });
+
+    // Select All button
+    if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', function () {
+            const allSelected = selectedOrders.size === orderCheckboxes.length;
+
+            orderCheckboxes.forEach(checkbox => {
+                checkbox.checked = !allSelected;
+                const row = checkbox.closest('tr');
+                if (!allSelected) {
+                    row.classList.add('selected');
+                    selectedOrders.add(row.getAttribute('data-order'));
+                } else {
+                    row.classList.remove('selected');
+                    selectedOrders.delete(row.getAttribute('data-order'));
+                }
+            });
+
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = !allSelected;
+            }
+
+            updateBatchBar();
+
+            this.innerHTML = allSelected
+                ? '<i class="fas fa-check-double"></i> Selecionar Todos'
+                : '<i class="fas fa-times"></i> Desmarcar Todos';
+        });
+    }
+}
+
+function updateBatchBar() {
+    const count = selectedOrders.size;
+    const selectedCountEl = document.getElementById('selectedCount');
+    const labelCountEl = document.getElementById('labelCount');
+    const totalFreightEl = document.getElementById('totalFreight');
+    const generateLabelsBtn = document.getElementById('generateLabelsBtn');
+    const confirmBatchDispatch = document.getElementById('confirmBatchDispatch');
+
+    // Update count
+    if (selectedCountEl) selectedCountEl.textContent = count;
+    if (labelCountEl) labelCountEl.textContent = count;
+
+    // Calculate total freight
+    let totalFreight = 0;
+    selectedOrders.forEach(orderId => {
+        const row = document.querySelector(`tr[data-order="${orderId}"]`);
+        if (row) {
+            const priceEl = row.querySelector('.freight-price');
+            if (priceEl) {
+                totalFreight += parseFloat(priceEl.getAttribute('data-price') || 0);
+            }
+        }
+    });
+
+    if (totalFreightEl) {
+        totalFreightEl.textContent = `R$ ${totalFreight.toFixed(2).replace('.', ',')}`;
+    }
+
+    // Enable/disable buttons
+    if (generateLabelsBtn) generateLabelsBtn.disabled = count === 0;
+    if (confirmBatchDispatch) confirmBatchDispatch.disabled = count === 0;
+}
+
+function initializeBatchActions() {
+    const generateLabelsBtn = document.getElementById('generateLabelsBtn');
+    const confirmBatchDispatch = document.getElementById('confirmBatchDispatch');
+
+    // Generate Labels for all selected
+    if (generateLabelsBtn) {
+        generateLabelsBtn.addEventListener('click', function () {
+            if (selectedOrders.size === 0) {
+                showToast('Selecione pelo menos um pedido', 'warning');
+                return;
+            }
+
+            showToast(`Gerando ${selectedOrders.size} etiqueta(s)...`, 'info');
+
+            setTimeout(() => {
+                generatePrintableLabels();
+            }, 500);
+        });
+    }
+
+    // Confirm Batch Dispatch
+    if (confirmBatchDispatch) {
+        confirmBatchDispatch.addEventListener('click', function () {
+            if (selectedOrders.size === 0) {
+                showToast('Selecione pelo menos um pedido', 'warning');
+                return;
+            }
+
+            const count = selectedOrders.size;
+            showToast(`Confirmando despacho de ${count} pedido(s)...`, 'info');
+
+            setTimeout(() => {
+                // Remove dispatched orders from table
+                selectedOrders.forEach(orderId => {
+                    const row = document.querySelector(`tr[data-order="${orderId}"]`);
+                    if (row) {
+                        row.style.animation = 'slideOut 0.3s ease forwards';
+                        setTimeout(() => row.remove(), 300);
+                    }
+                });
+
+                selectedOrders.clear();
+                updateBatchBar();
+
+                showToast(`${count} pedido(s) despachado(s) com sucesso!`, 'success');
+            }, 1000);
+        });
+    }
+}
+
+function generatePrintableLabels() {
+    const labelsData = [];
+
+    selectedOrders.forEach(orderId => {
+        const row = document.querySelector(`tr[data-order="${orderId}"]`);
+        if (row) {
+            const client = row.cells[2].textContent;
+            const destination = row.cells[3].textContent.replace(/^\s*/, '');
+            const items = row.cells[4].textContent;
+            const value = row.cells[5].textContent;
+            const carrier = row.querySelector('.carrier-select');
+            const carrierName = carrier ? carrier.options[carrier.selectedIndex].text.split(' - ')[0] : 'PAC';
+
+            labelsData.push({
+                orderId: orderId,
+                client: client,
+                destination: destination,
+                items: items,
+                value: value,
+                carrier: carrierName,
+                date: new Date().toLocaleDateString('pt-BR')
+            });
+        }
+    });
+
+    // Open print window
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Etiquetas de Envio - TabShop</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: 'Arial', sans-serif; padding: 20px; }
+                .labels-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+                .shipping-label {
+                    width: 100mm;
+                    min-height: 140mm;
+                    border: 2px solid #000;
+                    padding: 15px;
+                    page-break-inside: avoid;
+                    background: #fff;
+                }
+                .label-header {
+                    text-align: center;
+                    border-bottom: 2px solid #000;
+                    padding-bottom: 10px;
+                    margin-bottom: 15px;
+                }
+                .label-header h1 { font-size: 18px; margin-bottom: 5px; }
+                .label-header .order-id { font-size: 14px; color: #666; }
+                .label-section { margin-bottom: 15px; }
+                .label-section h3 { font-size: 12px; color: #666; margin-bottom: 5px; text-transform: uppercase; }
+                .label-section p { font-size: 14px; font-weight: 600; }
+                .barcode { text-align: center; font-family: 'Libre Barcode 39', monospace; font-size: 40px; margin: 20px 0; letter-spacing: 5px; }
+                .carrier-badge { display: inline-block; background: #1e3a5f; color: #fff; padding: 5px 15px; border-radius: 4px; font-weight: bold; }
+                .label-footer { text-align: center; font-size: 10px; color: #999; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc; }
+                @media print {
+                    body { padding: 0; }
+                    .no-print { display: none; }
+                    .shipping-label { page-break-after: always; margin: 0; }
+                }
+                .print-btn { display: block; margin: 20px auto; padding: 15px 40px; background: #1e3a5f; color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+                .print-btn:hover { background: #2d5a8a; }
+            </style>
+        </head>
+        <body>
+            <button class="print-btn no-print" onclick="window.print()">🖨️ Imprimir Etiquetas</button>
+            <div class="labels-container">
+                ${labelsData.map(label => `
+                    <div class="shipping-label">
+                        <div class="label-header">
+                            <h1>TabShop Logística</h1>
+                            <span class="order-id">${label.orderId}</span>
+                        </div>
+                        <div class="label-section">
+                            <h3>Destinatário</h3>
+                            <p>${label.client}</p>
+                        </div>
+                        <div class="label-section">
+                            <h3>Endereço</h3>
+                            <p>${label.destination}</p>
+                        </div>
+                        <div class="label-section">
+                            <h3>Conteúdo</h3>
+                            <p>${label.items} • ${label.value}</p>
+                        </div>
+                        <div class="barcode">*${label.orderId.replace('#', '')}*</div>
+                        <div class="label-section" style="text-align: center;">
+                            <span class="carrier-badge">${label.carrier}</span>
+                        </div>
+                        <div class="label-footer">
+                            Emitido em ${label.date} • TabShop Sistema de Logística
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+
+    showToast(`${labelsData.length} etiqueta(s) gerada(s) - Página de impressão aberta!`, 'success');
+}
+
+function initializeRefreshPrices() {
+    const refreshBtn = document.getElementById('refreshPrices');
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function () {
+            showToast('Atualizando preços de frete...', 'info');
+
+            // Simulate API call to Correios
+            const rows = document.querySelectorAll('#ordersTableBody tr');
+
+            rows.forEach(row => {
+                const freightPrice = row.querySelector('.freight-price');
+                if (freightPrice) {
+                    // Simulate price variation
+                    const currentPrice = parseFloat(freightPrice.getAttribute('data-price'));
+                    const variation = (Math.random() - 0.5) * 5; // +/- R$ 2.50
+                    const newPrice = Math.max(15, currentPrice + variation);
+
+                    freightPrice.setAttribute('data-price', newPrice.toFixed(2));
+                    freightPrice.textContent = `R$ ${newPrice.toFixed(2).replace('.', ',')}`;
+
+                    // Update carrier select options
+                    const carrierSelect = row.querySelector('.carrier-select');
+                    if (carrierSelect) {
+                        const pacPrice = newPrice;
+                        const sedexPrice = newPrice * 1.6;
+                        const jadlogPrice = newPrice * 1.25;
+
+                        carrierSelect.innerHTML = `
+                            <option value="pac" selected>PAC - R$ ${pacPrice.toFixed(2).replace('.', ',')}</option>
+                            <option value="sedex">SEDEX - R$ ${sedexPrice.toFixed(2).replace('.', ',')}</option>
+                            <option value="jadlog">JadLog - R$ ${jadlogPrice.toFixed(2).replace('.', ',')}</option>
+                        `;
+                    }
+                }
+            });
+
+            updateBatchBar();
+            showToast('Preços atualizados com sucesso!', 'success');
+        });
+    }
 }
 
 // ==========================================

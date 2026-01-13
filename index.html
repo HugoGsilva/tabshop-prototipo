@@ -503,176 +503,188 @@
                     <p>Visão do Despachante - Gestão de Envios</p>
                 </div>
 
-                <div class="logistics-grid">
-                    <!-- Lista de Pedidos Aprovados -->
-                    <div class="card approved-orders-card">
+                <!-- Barra de Ações em Lote -->
+                <div class="batch-actions-bar" id="batchActionsBar">
+                    <div class="batch-info">
+                        <span class="batch-count"><strong id="selectedCount">0</strong> pedidos selecionados</span>
+                        <span class="batch-total">Total frete: <strong id="totalFreight">R$ 0,00</strong></span>
+                    </div>
+                    <div class="batch-buttons">
+                        <button class="btn btn-outline" id="selectAllBtn">
+                            <i class="fas fa-check-double"></i> Selecionar Todos
+                        </button>
+                        <button class="btn btn-primary" id="generateLabelsBtn" disabled>
+                            <i class="fas fa-print"></i> Gerar Etiquetas (<span id="labelCount">0</span>)
+                        </button>
+                        <button class="btn btn-success" id="confirmBatchDispatch" disabled>
+                            <i class="fas fa-truck"></i> Confirmar Despacho
+                        </button>
+                    </div>
+                </div>
+
+                <div class="logistics-grid-new">
+                    <!-- Lista de Pedidos com Checkbox e Frete Calculado -->
+                    <div class="card orders-table-card">
                         <div class="card-header">
                             <h2><i class="fas fa-clipboard-check"></i> Pedidos Aprovados</h2>
-                            <span class="badge badge-primary">5 pedidos</span>
-                        </div>
-                        <div class="orders-list">
-                            <div class="order-item" data-order="PED-2024007">
-                                <div class="order-info">
-                                    <strong>#PED-2024007</strong>
-                                    <span>Paulo Mendes</span>
-                                    <span class="order-items">3 itens • R$ 567,80</span>
-                                </div>
-                                <div class="order-destination">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>São Paulo, SP</span>
-                                </div>
-                                <button class="btn btn-primary btn-sm select-order">Selecionar</button>
-                            </div>
-
-                            <div class="order-item" data-order="PED-2024008">
-                                <div class="order-info">
-                                    <strong>#PED-2024008</strong>
-                                    <span>Lucia Andrade</span>
-                                    <span class="order-items">1 item • R$ 189,90</span>
-                                </div>
-                                <div class="order-destination">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Rio de Janeiro, RJ</span>
-                                </div>
-                                <button class="btn btn-primary btn-sm select-order">Selecionar</button>
-                            </div>
-
-                            <div class="order-item" data-order="PED-2024009">
-                                <div class="order-info">
-                                    <strong>#PED-2024009</strong>
-                                    <span>Ricardo Nunes</span>
-                                    <span class="order-items">2 itens • R$ 445,00</span>
-                                </div>
-                                <div class="order-destination">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Belo Horizonte, MG</span>
-                                </div>
-                                <button class="btn btn-primary btn-sm select-order">Selecionar</button>
-                            </div>
-
-                            <div class="order-item" data-order="PED-2024010">
-                                <div class="order-info">
-                                    <strong>#PED-2024010</strong>
-                                    <span>Mariana Torres</span>
-                                    <span class="order-items">4 itens • R$ 832,50</span>
-                                </div>
-                                <div class="order-destination">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Curitiba, PR</span>
-                                </div>
-                                <button class="btn btn-primary btn-sm select-order">Selecionar</button>
-                            </div>
-
-                            <div class="order-item" data-order="PED-2024011">
-                                <div class="order-info">
-                                    <strong>#PED-2024011</strong>
-                                    <span>Felipe Ramos</span>
-                                    <span class="order-items">2 itens • R$ 298,00</span>
-                                </div>
-                                <div class="order-destination">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Porto Alegre, RS</span>
-                                </div>
-                                <button class="btn btn-primary btn-sm select-order">Selecionar</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Painel de Despacho -->
-                    <div class="dispatch-panel">
-                        <!-- Calculadora de Frete -->
-                        <div class="card shipping-calculator">
-                            <div class="card-header">
-                                <h2><i class="fas fa-calculator"></i> Cálculo de Frete (UC04)</h2>
-                            </div>
-                            <div class="selected-order-info hidden" id="selectedOrderInfo">
-                                <div class="order-badge">
-                                    <span id="selectedOrderId">-</span>
-                                </div>
-                                <div class="order-details">
-                                    <span id="selectedOrderClient">-</span>
-                                    <span id="selectedOrderValue">-</span>
-                                </div>
-                            </div>
-                            <form id="shippingForm" class="form">
-                                <div class="form-group">
-                                    <label for="destinationCep">CEP de Destino *</label>
-                                    <div class="input-with-button">
-                                        <input type="text" id="destinationCep" placeholder="00000-000" maxlength="9">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-search"></i> Calcular
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-
-                            <div class="shipping-options hidden" id="shippingOptions">
-                                <h3>Opções de Transportadora</h3>
-                                <div class="carrier-list">
-                                    <label class="carrier-option">
-                                        <input type="radio" name="carrier" value="sedex">
-                                        <div class="carrier-info">
-                                            <div class="carrier-logo sedex">SEDEX</div>
-                                            <div class="carrier-details">
-                                                <span class="carrier-price">R$ 45,90</span>
-                                                <span class="carrier-time">2-3 dias úteis</span>
-                                            </div>
-                                        </div>
-                                    </label>
-
-                                    <label class="carrier-option">
-                                        <input type="radio" name="carrier" value="pac">
-                                        <div class="carrier-info">
-                                            <div class="carrier-logo pac">PAC</div>
-                                            <div class="carrier-details">
-                                                <span class="carrier-price">R$ 28,50</span>
-                                                <span class="carrier-time">5-8 dias úteis</span>
-                                            </div>
-                                        </div>
-                                    </label>
-
-                                    <label class="carrier-option">
-                                        <input type="radio" name="carrier" value="jadlog">
-                                        <div class="carrier-info">
-                                            <div class="carrier-logo jadlog">JadLog</div>
-                                            <div class="carrier-details">
-                                                <span class="carrier-price">R$ 35,20</span>
-                                                <span class="carrier-time">3-5 dias úteis</span>
-                                            </div>
-                                        </div>
-                                    </label>
-
-                                    <label class="carrier-option">
-                                        <input type="radio" name="carrier" value="azul">
-                                        <div class="carrier-info">
-                                            <div class="carrier-logo azul">Azul Cargo</div>
-                                            <div class="carrier-details">
-                                                <span class="carrier-price">R$ 52,00</span>
-                                                <span class="carrier-time">1-2 dias úteis</span>
-                                            </div>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Ações de Despacho -->
-                        <div class="card dispatch-actions">
-                            <div class="card-header">
-                                <h2><i class="fas fa-shipping-fast"></i> Ações de Envio</h2>
-                            </div>
-                            <div class="actions-grid">
-                                <button class="action-btn" id="generateLabel" disabled>
-                                    <i class="fas fa-tag"></i>
-                                    <span>Gerar Etiqueta de Envio</span>
-                                    <small>(UC06)</small>
+                            <div class="header-actions-mini">
+                                <button class="btn btn-outline btn-sm" id="refreshPrices">
+                                    <i class="fas fa-sync-alt"></i> Atualizar Preços
                                 </button>
-
-                                <button class="action-btn success" id="confirmDispatch" disabled>
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Confirmar Despacho</span>
-                                    <small>Marcar como enviado</small>
-                                </button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table orders-table-multi">
+                                <thead>
+                                    <tr>
+                                        <th class="checkbox-col">
+                                            <label class="custom-checkbox">
+                                                <input type="checkbox" id="selectAllCheckbox">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </th>
+                                        <th>Pedido</th>
+                                        <th>Cliente</th>
+                                        <th>Destino</th>
+                                        <th>Itens</th>
+                                        <th>Valor</th>
+                                        <th>Frete (Calculado)</th>
+                                        <th>Transportadora</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTableBody">
+                                    <tr data-order="PED-2024007" data-cep="01310100" data-cidade="São Paulo"
+                                        data-uf="SP">
+                                        <td class="checkbox-col">
+                                            <label class="custom-checkbox">
+                                                <input type="checkbox" class="order-checkbox">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </td>
+                                        <td><strong class="order-id">#PED-2024007</strong></td>
+                                        <td>Paulo Mendes</td>
+                                        <td><i class="fas fa-map-marker-alt"></i> São Paulo, SP</td>
+                                        <td>3 itens</td>
+                                        <td>R$ 567,80</td>
+                                        <td class="freight-cell">
+                                            <span class="freight-price" data-price="28.50">R$ 28,50</span>
+                                            <span class="freight-time">5-8 dias</span>
+                                        </td>
+                                        <td>
+                                            <select class="carrier-select">
+                                                <option value="pac" selected>PAC - R$ 28,50</option>
+                                                <option value="sedex">SEDEX - R$ 45,90</option>
+                                                <option value="jadlog">JadLog - R$ 35,20</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr data-order="PED-2024008" data-cep="22041080" data-cidade="Rio de Janeiro"
+                                        data-uf="RJ">
+                                        <td class="checkbox-col">
+                                            <label class="custom-checkbox">
+                                                <input type="checkbox" class="order-checkbox">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </td>
+                                        <td><strong class="order-id">#PED-2024008</strong></td>
+                                        <td>Lucia Andrade</td>
+                                        <td><i class="fas fa-map-marker-alt"></i> Rio de Janeiro, RJ</td>
+                                        <td>1 item</td>
+                                        <td>R$ 189,90</td>
+                                        <td class="freight-cell">
+                                            <span class="freight-price" data-price="32.80">R$ 32,80</span>
+                                            <span class="freight-time">5-8 dias</span>
+                                        </td>
+                                        <td>
+                                            <select class="carrier-select">
+                                                <option value="pac" selected>PAC - R$ 32,80</option>
+                                                <option value="sedex">SEDEX - R$ 52,40</option>
+                                                <option value="jadlog">JadLog - R$ 41,50</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr data-order="PED-2024009" data-cep="30130000" data-cidade="Belo Horizonte"
+                                        data-uf="MG">
+                                        <td class="checkbox-col">
+                                            <label class="custom-checkbox">
+                                                <input type="checkbox" class="order-checkbox">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </td>
+                                        <td><strong class="order-id">#PED-2024009</strong></td>
+                                        <td>Ricardo Nunes</td>
+                                        <td><i class="fas fa-map-marker-alt"></i> Belo Horizonte, MG</td>
+                                        <td>2 itens</td>
+                                        <td>R$ 445,00</td>
+                                        <td class="freight-cell">
+                                            <span class="freight-price" data-price="38.90">R$ 38,90</span>
+                                            <span class="freight-time">5-8 dias</span>
+                                        </td>
+                                        <td>
+                                            <select class="carrier-select">
+                                                <option value="pac" selected>PAC - R$ 38,90</option>
+                                                <option value="sedex">SEDEX - R$ 62,30</option>
+                                                <option value="jadlog">JadLog - R$ 48,60</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr data-order="PED-2024010" data-cep="80010000" data-cidade="Curitiba"
+                                        data-uf="PR">
+                                        <td class="checkbox-col">
+                                            <label class="custom-checkbox">
+                                                <input type="checkbox" class="order-checkbox">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </td>
+                                        <td><strong class="order-id">#PED-2024010</strong></td>
+                                        <td>Mariana Torres</td>
+                                        <td><i class="fas fa-map-marker-alt"></i> Curitiba, PR</td>
+                                        <td>4 itens</td>
+                                        <td>R$ 832,50</td>
+                                        <td class="freight-cell">
+                                            <span class="freight-price" data-price="42.50">R$ 42,50</span>
+                                            <span class="freight-time">5-8 dias</span>
+                                        </td>
+                                        <td>
+                                            <select class="carrier-select">
+                                                <option value="pac" selected>PAC - R$ 42,50</option>
+                                                <option value="sedex">SEDEX - R$ 68,00</option>
+                                                <option value="jadlog">JadLog - R$ 53,10</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr data-order="PED-2024011" data-cep="90010000" data-cidade="Porto Alegre"
+                                        data-uf="RS">
+                                        <td class="checkbox-col">
+                                            <label class="custom-checkbox">
+                                                <input type="checkbox" class="order-checkbox">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </td>
+                                        <td><strong class="order-id">#PED-2024011</strong></td>
+                                        <td>Felipe Ramos</td>
+                                        <td><i class="fas fa-map-marker-alt"></i> Porto Alegre, RS</td>
+                                        <td>2 itens</td>
+                                        <td>R$ 298,00</td>
+                                        <td class="freight-cell">
+                                            <span class="freight-price" data-price="48.70">R$ 48,70</span>
+                                            <span class="freight-time">5-8 dias</span>
+                                        </td>
+                                        <td>
+                                            <select class="carrier-select">
+                                                <option value="pac" selected>PAC - R$ 48,70</option>
+                                                <option value="sedex">SEDEX - R$ 77,90</option>
+                                                <option value="jadlog">JadLog - R$ 60,90</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <div class="status-legend">
+                                <span><i class="fas fa-circle text-success"></i> Frete calculado automaticamente</span>
+                                <span><i class="fas fa-info-circle"></i> Preços via API Correios (simulado)</span>
                             </div>
                         </div>
                     </div>
@@ -728,6 +740,7 @@
     <!-- Toast Notification -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 

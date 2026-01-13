@@ -1433,3 +1433,285 @@ body {
         margin-top: 8px;
     }
 }
+
+/* ==========================================
+   Multi-Select Logistics Interface
+   ========================================== */
+
+/* Batch Actions Bar */
+.batch-actions-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    border-radius: var(--border-radius);
+    margin-bottom: 24px;
+    color: #fff;
+    box-shadow: var(--shadow-md);
+}
+
+.batch-info {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.batch-count,
+.batch-total {
+    font-size: 0.95rem;
+}
+
+.batch-count strong,
+.batch-total strong {
+    font-size: 1.25rem;
+}
+
+.batch-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.batch-buttons .btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.batch-buttons .btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.batch-buttons .btn-primary {
+    background: #fff;
+    color: var(--primary-color);
+}
+
+.batch-buttons .btn-primary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.batch-buttons .btn-success {
+    background: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.batch-buttons .btn-success:hover:not(:disabled) {
+    background: #059669;
+}
+
+/* Custom Checkbox */
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.custom-checkbox .checkmark {
+    height: 20px;
+    width: 20px;
+    background-color: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    transition: all var(--transition-fast);
+}
+
+.custom-checkbox:hover input~.checkmark {
+    border-color: var(--primary-color);
+}
+
+.custom-checkbox input:checked~.checkmark {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.custom-checkbox .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.custom-checkbox input:checked~.checkmark:after {
+    display: block;
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Logistics Grid New */
+.logistics-grid-new {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.orders-table-card {
+    overflow: hidden;
+}
+
+.orders-table-multi {
+    width: 100%;
+}
+
+.orders-table-multi th,
+.orders-table-multi td {
+    padding: 16px 12px;
+    vertical-align: middle;
+}
+
+.orders-table-multi .checkbox-col {
+    width: 50px;
+    text-align: center;
+}
+
+.orders-table-multi tr.selected {
+    background: rgba(30, 58, 95, 0.08);
+}
+
+.orders-table-multi tr:hover {
+    background: var(--bg-tertiary);
+}
+
+/* Freight Cell */
+.freight-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.freight-price {
+    font-weight: 700;
+    color: var(--success-color);
+    font-size: 1rem;
+}
+
+.freight-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Carrier Select */
+.carrier-select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    min-width: 160px;
+}
+
+.carrier-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Table Footer */
+.table-footer {
+    padding: 16px 24px;
+    background: var(--bg-tertiary);
+    border-top: 1px solid var(--border-color);
+}
+
+.status-legend {
+    display: flex;
+    gap: 24px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.status-legend i {
+    margin-right: 6px;
+}
+
+.status-legend .text-success {
+    color: var(--success-color);
+    font-size: 0.6rem;
+}
+
+/* Header Actions Mini */
+.header-actions-mini {
+    display: flex;
+    gap: 8px;
+}
+
+/* Order ID styling */
+.order-id {
+    color: var(--primary-color);
+}
+
+/* Print Labels Page Styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .print-area,
+    .print-area * {
+        visibility: visible;
+    }
+
+    .print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    .shipping-label {
+        page-break-after: always;
+        border: 2px solid #000;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+/* Responsive adjustments for batch actions */
+@media (max-width: 992px) {
+    .batch-actions-bar {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+
+    .batch-info {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .batch-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .orders-table-multi th:nth-child(4),
+    .orders-table-multi td:nth-child(4),
+    .orders-table-multi th:nth-child(5),
+    .orders-table-multi td:nth-child(5) {
+        display: none;
+    }
+
+    .carrier-select {
+        min-width: 120px;
+        font-size: 0.75rem;
+    }
+}
