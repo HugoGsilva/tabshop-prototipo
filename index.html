@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabShop - Sistema de Logística E-commerce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-box-open"></i>
+                <span>TabShop</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="nav-item active" data-page="dashboard">
+                    <a href="#dashboard">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-page="produtos">
+                    <a href="#produtos">
+                        <i class="fas fa-box"></i>
+                        <span>Produtos</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-page="vendedores">
+                    <a href="#vendedores">
+                        <i class="fas fa-store"></i>
+                        <span>Vendedores</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-page="clientes">
+                    <a href="#clientes">
+                        <i class="fas fa-users"></i>
+                        <span>Clientes</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-page="relatorios">
+                    <a href="#relatorios">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-page="logistica">
+                    <a href="#logistica">
+                        <i class="fas fa-truck"></i>
+                        <span>Logística</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-profile-mini">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=1e3a5f&color=fff" alt="Admin">
+                <span>Admin</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar pedidos, produtos, clientes...">
+            </div>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+
+                <div class="user-profile-wrapper">
+                    <div class="user-profile" id="userProfileBtn">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=1e3a5f&color=fff" alt="Admin"
+                            id="userAvatar">
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Administrador</span>
+                            <span class="user-role" id="userRole">Admin</span>
+                        </div>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </div>
+
+                    <!-- Dropdown Menu -->
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-header">
+                            <span>Trocar Perfil</span>
+                        </div>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item active" data-role="admin">
+                                <div class="role-icon admin">
+                                    <i class="fas fa-user-shield"></i>
+                                </div>
+                                <div class="role-info">
+                                    <span class="role-name">Administrador</span>
+                                    <span class="role-desc">Acesso completo ao sistema</span>
+                                </div>
+                                <i class="fas fa-check check-icon"></i>
+                            </li>
+                            <li class="dropdown-item" data-role="vendedor">
+                                <div class="role-icon vendedor">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                                <div class="role-info">
+                                    <span class="role-name">Vendedor</span>
+                                    <span class="role-desc">Cadastro de produtos e clientes</span>
+                                </div>
+                                <i class="fas fa-check check-icon"></i>
+                            </li>
+                            <li class="dropdown-item" data-role="despachante">
+                                <div class="role-icon despachante">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="role-info">
+                                    <span class="role-name">Despachante</span>
+                                    <span class="role-desc">Operação de logística e envios</span>
+                                </div>
+                                <i class="fas fa-check check-icon"></i>
+                            </li>
+                        </ul>
+                        <div class="dropdown-footer">
+                            <a href="#" class="dropdown-link">
+                                <i class="fas fa-cog"></i> Configurações
+                            </a>
+                            <a href="#" class="dropdown-link logout">
+                                <i class="fas fa-sign-out-alt"></i> Sair
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Dashboard Page -->
+            <section class="page" id="dashboard-page">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <p>Visão geral do sistema de logística</p>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon clients">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="kpi-info">
+                            <span class="kpi-label">Total de Clientes</span>
+                            <span class="kpi-value">2,847</span>
+                            <span class="kpi-change positive">
+                                <i class="fas fa-arrow-up"></i> +12.5%
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-icon products">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="kpi-info">
+                            <span class="kpi-label">Produtos Cadastrados</span>
+                            <span class="kpi-value">1,234</span>
+                            <span class="kpi-change positive">
+                                <i class="fas fa-arrow-up"></i> +8.3%
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-icon sales">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="kpi-info">
+                            <span class="kpi-label">Vendas do Mês</span>
+                            <span class="kpi-value">R$ 89.450</span>
+                            <span class="kpi-change positive">
+                                <i class="fas fa-arrow-up"></i> +23.1%
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="kpi-info">
+                            <span class="kpi-label">Entregas Pendentes</span>
+                            <span class="kpi-value">47</span>
+                            <span class="kpi-change negative">
+                                <i class="fas fa-arrow-down"></i> -5.2%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders Table -->
+                <div class="card orders-card">
+                    <div class="card-header">
+                        <h2>Pedidos Recentes</h2>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-filter"></i> Filtrar
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Pedido</th>
+                                    <th>Cliente</th>
+                                    <th>Produtos</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                    <th>Data</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>#PED-2024001</strong></td>
+                                    <td>Maria Silva</td>
+                                    <td>3 itens</td>
+                                    <td>R$ 459,90</td>
+                                    <td><span class="badge badge-warning">Aguardando</span></td>
+                                    <td>13/01/2026</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm">Aprovar Pedido</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>#PED-2024002</strong></td>
+                                    <td>João Santos</td>
+                                    <td>1 item</td>
+                                    <td>R$ 129,00</td>
+                                    <td><span class="badge badge-info">Em Trânsito</span></td>
+                                    <td>12/01/2026</td>
+                                    <td>
+                                        <button class="btn btn-outline btn-sm">Ver Detalhes</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>#PED-2024003</strong></td>
+                                    <td>Ana Oliveira</td>
+                                    <td>5 itens</td>
+                                    <td>R$ 892,50</td>
+                                    <td><span class="badge badge-success">Entregue</span></td>
+                                    <td>11/01/2026</td>
+                                    <td>
+                                        <button class="btn btn-outline btn-sm">Ver Detalhes</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>#PED-2024004</strong></td>
+                                    <td>Carlos Ferreira</td>
+                                    <td>2 itens</td>
+                                    <td>R$ 345,00</td>
+                                    <td><span class="badge badge-warning">Aguardando</span></td>
+                                    <td>13/01/2026</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm">Aprovar Pedido</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>#PED-2024005</strong></td>
+                                    <td>Fernanda Costa</td>
+                                    <td>4 itens</td>
+                                    <td>R$ 678,30</td>
+                                    <td><span class="badge badge-info">Em Trânsito</span></td>
+                                    <td>10/01/2026</td>
+                                    <td>
+                                        <button class="btn btn-outline btn-sm">Ver Detalhes</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>#PED-2024006</strong></td>
+                                    <td>Roberto Lima</td>
+                                    <td>1 item</td>
+                                    <td>R$ 89,90</td>
+                                    <td><span class="badge badge-success">Entregue</span></td>
+                                    <td>09/01/2026</td>
+                                    <td>
+                                        <button class="btn btn-outline btn-sm">Ver Detalhes</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vendedores Page (Cadastro de Produtos e Clientes) -->
+            <section class="page hidden" id="vendedores-page">
+                <div class="page-header">
+                    <h1>Cadastro de Produtos e Clientes</h1>
+                    <p>Visão do Vendedor - Gestão de Cadastros</p>
+                </div>
+
+                <div class="forms-grid">
+                    <!-- Cadastro de Produto -->
+                    <div class="card form-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-box"></i> Cadastro de Produto (UC01)</h2>
+                        </div>
+                        <form id="productForm" class="form">
+                            <div class="form-group">
+                                <label for="productName">Nome do Produto *</label>
+                                <input type="text" id="productName" placeholder="Ex: Camiseta Básica" required>
+                                <span class="error-message"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="productDescription">Descrição</label>
+                                <textarea id="productDescription" rows="3"
+                                    placeholder="Descrição detalhada do produto..."></textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="productPrice">Preço de Venda (R$) *</label>
+                                    <input type="number" id="productPrice" step="0.01" placeholder="0,00" required>
+                                    <span class="error-message"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="productCost">Custo (R$) *</label>
+                                    <input type="number" id="productCost" step="0.01" placeholder="0,00" required>
+                                    <span class="error-message"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="productStock">Estoque *</label>
+                                    <input type="number" id="productStock" placeholder="0" required>
+                                    <span class="error-message"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="productUnit">Unidade de Medida *</label>
+                                    <select id="productUnit" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="UN">Unidade (UN)</option>
+                                        <option value="GL">Galão (GL)</option>
+                                        <option value="KG">Quilograma (KG)</option>
+                                        <option value="L">Litro (L)</option>
+                                        <option value="M">Metro (M)</option>
+                                        <option value="CX">Caixa (CX)</option>
+                                    </select>
+                                    <span class="error-message"></span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg btn-full">
+                                <i class="fas fa-save"></i> Salvar Produto
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Registro de Cliente -->
+                    <div class="card form-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-user-plus"></i> Registro de Cliente (UC03)</h2>
+                        </div>
+                        <form id="clientForm" class="form">
+                            <div class="form-group">
+                                <label for="clientName">Nome Completo *</label>
+                                <input type="text" id="clientName" placeholder="Nome do cliente" required>
+                                <span class="error-message"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="clientCpf">CPF *</label>
+                                    <input type="text" id="clientCpf" placeholder="000.000.000-00" required
+                                        maxlength="14">
+                                    <span class="error-message"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="clientPhone">Telefone</label>
+                                    <input type="text" id="clientPhone" placeholder="(00) 00000-0000" maxlength="15">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="clientEmail">E-mail</label>
+                                <input type="email" id="clientEmail" placeholder="email@exemplo.com">
+                            </div>
+
+                            <div class="form-divider">
+                                <span>Endereço</span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group cep-group">
+                                    <label for="clientCep">CEP *</label>
+                                    <input type="text" id="clientCep" placeholder="00000-000" required maxlength="9">
+                                    <button type="button" class="btn btn-outline btn-sm cep-search">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                    <span class="error-message"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group flex-2">
+                                    <label for="clientStreet">Logradouro *</label>
+                                    <input type="text" id="clientStreet" placeholder="Rua, Avenida..." required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="clientNumber">Número *</label>
+                                    <input type="text" id="clientNumber" placeholder="Nº" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="clientComplement">Complemento</label>
+                                <input type="text" id="clientComplement" placeholder="Apto, Bloco...">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="clientNeighborhood">Bairro *</label>
+                                    <input type="text" id="clientNeighborhood" placeholder="Bairro" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="clientCity">Cidade *</label>
+                                    <input type="text" id="clientCity" placeholder="Cidade" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="clientState">UF *</label>
+                                    <select id="clientState" required>
+                                        <option value="">UF</option>
+                                        <option value="AC">AC</option>
+                                        <option value="AL">AL</option>
+                                        <option value="AP">AP</option>
+                                        <option value="AM">AM</option>
+                                        <option value="BA">BA</option>
+                                        <option value="CE">CE</option>
+                                        <option value="DF">DF</option>
+                                        <option value="ES">ES</option>
+                                        <option value="GO">GO</option>
+                                        <option value="MA">MA</option>
+                                        <option value="MT">MT</option>
+                                        <option value="MS">MS</option>
+                                        <option value="MG">MG</option>
+                                        <option value="PA">PA</option>
+                                        <option value="PB">PB</option>
+                                        <option value="PR">PR</option>
+                                        <option value="PE">PE</option>
+                                        <option value="PI">PI</option>
+                                        <option value="RJ">RJ</option>
+                                        <option value="RN">RN</option>
+                                        <option value="RS">RS</option>
+                                        <option value="RO">RO</option>
+                                        <option value="RR">RR</option>
+                                        <option value="SC">SC</option>
+                                        <option value="SP">SP</option>
+                                        <option value="SE">SE</option>
+                                        <option value="TO">TO</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg btn-full">
+                                <i class="fas fa-save"></i> Salvar Cliente
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Logística Page (Visão Despachante) -->
+            <section class="page hidden" id="logistica-page">
+                <div class="page-header">
+                    <h1>Operação de Logística</h1>
+                    <p>Visão do Despachante - Gestão de Envios</p>
+                </div>
+
+                <div class="logistics-grid">
+                    <!-- Lista de Pedidos Aprovados -->
+                    <div class="card approved-orders-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-clipboard-check"></i> Pedidos Aprovados</h2>
+                            <span class="badge badge-primary">5 pedidos</span>
+                        </div>
+                        <div class="orders-list">
+                            <div class="order-item" data-order="PED-2024007">
+                                <div class="order-info">
+                                    <strong>#PED-2024007</strong>
+                                    <span>Paulo Mendes</span>
+                                    <span class="order-items">3 itens • R$ 567,80</span>
+                                </div>
+                                <div class="order-destination">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>São Paulo, SP</span>
+                                </div>
+                                <button class="btn btn-primary btn-sm select-order">Selecionar</button>
+                            </div>
+
+                            <div class="order-item" data-order="PED-2024008">
+                                <div class="order-info">
+                                    <strong>#PED-2024008</strong>
+                                    <span>Lucia Andrade</span>
+                                    <span class="order-items">1 item • R$ 189,90</span>
+                                </div>
+                                <div class="order-destination">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Rio de Janeiro, RJ</span>
+                                </div>
+                                <button class="btn btn-primary btn-sm select-order">Selecionar</button>
+                            </div>
+
+                            <div class="order-item" data-order="PED-2024009">
+                                <div class="order-info">
+                                    <strong>#PED-2024009</strong>
+                                    <span>Ricardo Nunes</span>
+                                    <span class="order-items">2 itens • R$ 445,00</span>
+                                </div>
+                                <div class="order-destination">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Belo Horizonte, MG</span>
+                                </div>
+                                <button class="btn btn-primary btn-sm select-order">Selecionar</button>
+                            </div>
+
+                            <div class="order-item" data-order="PED-2024010">
+                                <div class="order-info">
+                                    <strong>#PED-2024010</strong>
+                                    <span>Mariana Torres</span>
+                                    <span class="order-items">4 itens • R$ 832,50</span>
+                                </div>
+                                <div class="order-destination">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Curitiba, PR</span>
+                                </div>
+                                <button class="btn btn-primary btn-sm select-order">Selecionar</button>
+                            </div>
+
+                            <div class="order-item" data-order="PED-2024011">
+                                <div class="order-info">
+                                    <strong>#PED-2024011</strong>
+                                    <span>Felipe Ramos</span>
+                                    <span class="order-items">2 itens • R$ 298,00</span>
+                                </div>
+                                <div class="order-destination">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Porto Alegre, RS</span>
+                                </div>
+                                <button class="btn btn-primary btn-sm select-order">Selecionar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Painel de Despacho -->
+                    <div class="dispatch-panel">
+                        <!-- Calculadora de Frete -->
+                        <div class="card shipping-calculator">
+                            <div class="card-header">
+                                <h2><i class="fas fa-calculator"></i> Cálculo de Frete (UC04)</h2>
+                            </div>
+                            <div class="selected-order-info hidden" id="selectedOrderInfo">
+                                <div class="order-badge">
+                                    <span id="selectedOrderId">-</span>
+                                </div>
+                                <div class="order-details">
+                                    <span id="selectedOrderClient">-</span>
+                                    <span id="selectedOrderValue">-</span>
+                                </div>
+                            </div>
+                            <form id="shippingForm" class="form">
+                                <div class="form-group">
+                                    <label for="destinationCep">CEP de Destino *</label>
+                                    <div class="input-with-button">
+                                        <input type="text" id="destinationCep" placeholder="00000-000" maxlength="9">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-search"></i> Calcular
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="shipping-options hidden" id="shippingOptions">
+                                <h3>Opções de Transportadora</h3>
+                                <div class="carrier-list">
+                                    <label class="carrier-option">
+                                        <input type="radio" name="carrier" value="sedex">
+                                        <div class="carrier-info">
+                                            <div class="carrier-logo sedex">SEDEX</div>
+                                            <div class="carrier-details">
+                                                <span class="carrier-price">R$ 45,90</span>
+                                                <span class="carrier-time">2-3 dias úteis</span>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <label class="carrier-option">
+                                        <input type="radio" name="carrier" value="pac">
+                                        <div class="carrier-info">
+                                            <div class="carrier-logo pac">PAC</div>
+                                            <div class="carrier-details">
+                                                <span class="carrier-price">R$ 28,50</span>
+                                                <span class="carrier-time">5-8 dias úteis</span>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <label class="carrier-option">
+                                        <input type="radio" name="carrier" value="jadlog">
+                                        <div class="carrier-info">
+                                            <div class="carrier-logo jadlog">JadLog</div>
+                                            <div class="carrier-details">
+                                                <span class="carrier-price">R$ 35,20</span>
+                                                <span class="carrier-time">3-5 dias úteis</span>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <label class="carrier-option">
+                                        <input type="radio" name="carrier" value="azul">
+                                        <div class="carrier-info">
+                                            <div class="carrier-logo azul">Azul Cargo</div>
+                                            <div class="carrier-details">
+                                                <span class="carrier-price">R$ 52,00</span>
+                                                <span class="carrier-time">1-2 dias úteis</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ações de Despacho -->
+                        <div class="card dispatch-actions">
+                            <div class="card-header">
+                                <h2><i class="fas fa-shipping-fast"></i> Ações de Envio</h2>
+                            </div>
+                            <div class="actions-grid">
+                                <button class="action-btn" id="generateLabel" disabled>
+                                    <i class="fas fa-tag"></i>
+                                    <span>Gerar Etiqueta de Envio</span>
+                                    <small>(UC06)</small>
+                                </button>
+
+                                <button class="action-btn success" id="confirmDispatch" disabled>
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Confirmar Despacho</span>
+                                    <small>Marcar como enviado</small>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Placeholder Pages -->
+            <section class="page hidden" id="produtos-page">
+                <div class="page-header">
+                    <h1>Produtos</h1>
+                    <p>Gerenciamento de produtos do catálogo</p>
+                </div>
+                <div class="card">
+                    <div class="placeholder-content">
+                        <i class="fas fa-box"></i>
+                        <h3>Módulo de Produtos</h3>
+                        <p>Esta seção exibirá a lista completa de produtos cadastrados com opções de edição e exclusão.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page hidden" id="clientes-page">
+                <div class="page-header">
+                    <h1>Clientes</h1>
+                    <p>Gerenciamento de clientes cadastrados</p>
+                </div>
+                <div class="card">
+                    <div class="placeholder-content">
+                        <i class="fas fa-users"></i>
+                        <h3>Módulo de Clientes</h3>
+                        <p>Esta seção exibirá a lista completa de clientes cadastrados com histórico de compras.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page hidden" id="relatorios-page">
+                <div class="page-header">
+                    <h1>Relatórios</h1>
+                    <p>Análises e relatórios do sistema</p>
+                </div>
+                <div class="card">
+                    <div class="placeholder-content">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>Módulo de Relatórios</h3>
+                        <p>Esta seção exibirá relatórios de vendas, produtos e logística com gráficos interativos.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
